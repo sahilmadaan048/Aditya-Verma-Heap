@@ -1,4 +1,15 @@
+// https://www.youtube.com/watch?v=7VoJn544QrM&list=PL_z_8CaSLPWdtY9W22VjnPxG30CXNZpI9&index=6
 
+/*
+Given an array of n numbers. Your task is to read numbers from the array and keep at-most K numbers at the top (According to their decreasing frequency) every time a new number is read. We basically need to print top k numbers sorted by frequency when input stream has included k distinct elements, else need to print all distinct elements sorted by frequency.
+
+Example:
+Input :  arr[] = {5, 2, 1, 3, 2}
+k = 4
+Output : 5 2 5 1 2 5 1 2 3 5 2 1 3 5 . 
+------------------------------------------------------------------------------------------
+
+*/
 
 #include "bits/stdc++.h"
 #define int long long
@@ -37,30 +48,31 @@ template<typename typC> ostream &operator<<(ostream &cout,const vector<typC> &a)
 
 
 void solve() {
-    vector<int> arr = {1, 2, 3, 4, 5};
-    int k = 4;
-    // int x = 3;
-    unordered_map<int, int> mpp;
-    for(auto ele: arr) mpp[ele]++;
+    vector<int> arr = {1, 1, 1, 2, 2, 3};
+    int k = 2;
 
+    unordered_map<int, int> mpp;
+    for (auto ele : arr) mpp[ele]++;
+
+    // Min-heap of {frequency, element}
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
-    for (int i = 0; i < arr.size(); i++) {
-        pq.push({arr[i], mpp[arr[i]]});
+    for (auto &[num, freq] : mpp) {
+        pq.push({freq, num});
 
         if (pq.size() > k) {
-            pq.pop();  // remove the farthest element
+            pq.pop();  // remove element with lowest frequency
         }
     }
 
-    // Extract k closest elements
+    // Extract top-k frequent elements
     vector<int> ans;
     while (!pq.empty()) {
-        ans.push_back(pq.top().first);
+        ans.push_back(pq.top().second);
         pq.pop();
     }
 
-    sort(ans.begin(), ans.end());  // Final output should be sorted
+    sort(ans.begin(), ans.end());  // optional
     cout << ans << "\n";
 }
 
